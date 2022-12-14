@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a CLI tool for interacting directly with the `e-z.host` API. (from the ✨**_command line_**✨)
+This is a CLI tool for interacting directly with the `e-z.host` API. (from the ✨*command line*✨)
 
 ### Building
 
@@ -11,6 +11,8 @@ This is a CLI tool for interacting directly with the `e-z.host` API. (from the �
 - Check if you have cargo (Rust's package manager) installed, just type in `cargo`
 - If cargo is installed, run `cargo build --release`
 - Put the executable into one of your PATH entries
+  - Linux: usually /bin/ or /usr/bin/
+  - Windows: C:\Windows\System32 is good for it but don't use windows
 
 ## Usage
 

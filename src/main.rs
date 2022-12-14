@@ -1,6 +1,7 @@
 mod auth;
 mod files;
 mod helpers;
+mod short;
 
 use clap::{CommandFactory, Parser, Subcommand};
 
@@ -41,6 +42,18 @@ enum Commands {
         #[arg(short, long, default_value_t = false)]
         custom: bool,
     },
+    /// Shorten urls
+    Shorten {
+        /// The url you want to shorten
+        #[command()]
+        url: String,
+        /// Domain to be used when shortened
+        #[arg(short, long, default_value_t = String::from("astolfo.host"))]
+        domain: String,
+        /// Whether long url is used
+        #[arg(short, long, default_value_t = false)]
+        longurl: bool,
+    },
 }
 
 fn main() {
@@ -56,6 +69,7 @@ fn main() {
             amongus,
             custom,
         }) => files::upload(file_name, domain, random, invisible, emoji, amongus, custom),
+        Some(Commands::Shorten { url, domain, longurl }) => short::create_link(url, domain, longurl),
         Some(Commands::Login) => auth::login(),
         Some(Commands::Logout) => auth::logout(),
         None => Cli::command().print_help().unwrap(),

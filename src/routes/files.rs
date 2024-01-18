@@ -91,7 +91,7 @@ pub fn delete(file_name: &Option<String>) {
         Some(file_name) => {
             let client = Client::new();
 
-            let data = match cache::load(file_name.clone()) {
+            let data = match cache::delete(file_name.clone()) {
                 Ok(data) => data,
                 Err(err) => {
                     log::error!("{err}");

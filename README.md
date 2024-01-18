@@ -1,4 +1,4 @@
-<p align="center"><img style="width: 150px;" src="https://s3.us-east-1.wasabisys.com/e-zimagehosting/eztransparent.png"></p>
+<p align="center"><img style="width: 150px;" src="https://cdn.e-z.host/e-zimagehosting/eztransparent.png"></p>
 
 ## Introduction
 

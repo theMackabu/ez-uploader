@@ -2,6 +2,9 @@
 name = "e-z"
 version = "0.1.1"
 edition = "2021"
+license = "MIT"
+repository = "https://lab.themackabu.dev/self/ez"
+description = "Interact directly with the e-z.host API"
 
 [dependencies]
 home = "0.5.9"

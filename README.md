@@ -1,4 +1,4 @@
-<p align="center"><img style="width: 150px;" src="https://cdn.e-z.host/e-zimagehosting/eztransparent.png"></p>
+<p align="center"><img style="width: 150px;" src="https://r2.e-z.host/21c2dfbb-4d82-4c2a-a45e-3dee4795515c/hedta24p.png"></p>
 
 ## Introduction
 

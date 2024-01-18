@@ -20,6 +20,7 @@ This is a CLI tool for interacting directly with the [e-z.host](https://ez.gg) A
 Commands:
   login    Save your access key
   logout   Remove your access key
+  delete   Delete a file (last 10 cached)
   upload   Upload images, videos, gifs and audio
   shorten  Shorten urls
   help     Print this message or the help of the given subcommand(s)

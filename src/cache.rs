@@ -57,7 +57,7 @@ pub fn delete(name: String) -> Result<FileInfo, anyhow::Error> {
 }
 
 pub fn list() {
-    let db = load();
+    let mut db = load();
 
     let files = db
         .iter()
@@ -70,9 +70,10 @@ pub fn list() {
         .collect::<Vec<_>>();
 
     match Select::new("Select a file to delete:", files).prompt() {
-        Ok(test) => {
-            let key = helpers::trim_start_end(test.split(":").collect::<Vec<_>>()[0]);
+        Ok(item) => {
+            let key = helpers::trim_start_end(item.split(":").collect::<Vec<_>>()[0]);
             routes::files::delete(&Some(key.to_string()));
+            db.rem(&key).unwrap();
         }
         Err(_) => println!("{}", "Aborting...".white()),
     }

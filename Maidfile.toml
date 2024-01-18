@@ -1,0 +1,24 @@
+[project]
+name = "e-z"
+version = "0.1.1"
+
+[tasks.clean]
+script = ["rm -rf bin", "mkdir bin"]
+
+[tasks.build]
+depends = ["clean"]
+script = [
+   "cargo zigbuild --release", 
+   "cp target/release/e-z bin/ez"
+]
+
+[tasks.build.cache]
+path = "src"
+target = ["bin/ez"]
+
+[tasks.install]
+script = [
+   "maid build -q", 
+   "sudo cp bin/ez /usr/local/bin",
+   "echo Copied binary!"
+]

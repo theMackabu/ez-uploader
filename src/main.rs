@@ -1,15 +1,23 @@
-mod auth;
-mod files;
+mod globals;
 mod helpers;
-mod short;
+mod routes;
 
 use clap::{CommandFactory, Parser, Subcommand};
+use clap_verbosity_flag::{LogLevel, Verbosity};
+
+#[derive(Copy, Clone, Debug, Default)]
+struct NoneLevel;
+impl LogLevel for NoneLevel {
+    fn default() -> Option<log::Level> { None }
+}
 
 #[derive(Parser)]
 #[command(version)]
 struct Cli {
     #[command(subcommand)]
     command: Option<Commands>,
+    #[clap(flatten)]
+    verbose: Verbosity<NoneLevel>,
 }
 
 #[derive(Subcommand)]
@@ -22,24 +30,24 @@ enum Commands {
     Upload {
         /// The file you want to upload
         #[command()]
-        file_name: String,
-        /// Domain to be used when uploading
-        #[arg(short, long, default_value_t = String::from("i.e-z.host"))]
-        domain: String,
-        /// Whether random domain is used
-        #[arg(short, long, default_value_t = false)]
+        file: String,
+        /// Override domain to be used when uploading
+        #[arg(short, long)]
+        domain: Option<String>,
+        /// Toggle the use of your selected random domains
+        #[arg(short, long)]
         random: bool,
-        /// Whether invisible url is used
-        #[arg(short, long, default_value_t = false)]
+        /// Toggle the use of invisible characters in filenames
+        #[arg(short, long)]
         invisible: bool,
-        /// Whether emoji url is used
-        #[arg(short, long, default_value_t = false)]
+        /// Toggle the use of emojis in filenames
+        #[arg(short, long)]
         emoji: bool,
-        /// Whether amongus url is used
-        #[arg(short, long, default_value_t = false)]
-        amongus: bool,
-        /// Whether custom url is used
-        #[arg(short, long, default_value_t = false)]
+        /// Toggle the use of among us characters in filenames
+        #[arg(short, long)]
+        sus: bool,
+        /// Toggle the use of custom characters in filenames
+        #[arg(short, long)]
         custom: bool,
     },
     /// Shorten urls
@@ -47,31 +55,37 @@ enum Commands {
         /// The url you want to shorten
         #[command()]
         url: String,
-        /// Domain to be used when shortened
-        #[arg(short, long, default_value_t = String::from("astolfo.host"))]
-        domain: String,
-        /// Whether long url is used
-        #[arg(short, long, default_value_t = false)]
+        /// Override domain to be used when uploading
+        #[arg(short, long)]
+        domain: Option<String>,
+        /// Toggle between 8 and 18 character URLs
+        #[arg(short, long)]
         longurl: bool,
     },
 }
 
 fn main() {
     let cli = Cli::parse();
+    let mut env = env_logger::Builder::new();
+    let level = cli.verbose.log_level_filter();
+
+    globals::init();
+    env.filter_level(level).init();
 
     match &cli.command {
         Some(Commands::Upload {
-            file_name,
+            file,
             domain,
             random,
             invisible,
             emoji,
-            amongus,
+            sus,
             custom,
-        }) => files::upload(file_name, domain, random, invisible, emoji, amongus, custom),
-        Some(Commands::Shorten { url, domain, longurl }) => short::create_link(url, domain, longurl),
-        Some(Commands::Login) => auth::login(),
-        Some(Commands::Logout) => auth::logout(),
+        }) => routes::files::upload(file, domain, random, invisible, emoji, sus, custom),
+
+        Some(Commands::Shorten { url, domain, longurl }) => routes::shorten::create(url, domain, longurl),
+        Some(Commands::Login) => routes::auth::login(),
+        Some(Commands::Logout) => routes::auth::logout(),
         None => Cli::command().print_help().unwrap(),
     }
 }

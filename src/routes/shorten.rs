@@ -1,4 +1,4 @@
-use crate::{error, ok};
+use crate::{error, helpers::USER_AGENT, ok};
 use colored::Colorize;
 use global_placeholders::global;
 
@@ -23,7 +23,6 @@ struct Response {
 pub fn create(url: &String, domain: &Option<String>, longurl: &bool) {
     let client = Client::new();
     let mut headers = HeaderMap::new();
-    let user_agent = format!("[rust] EZ uploader v{}", env!("CARGO_PKG_VERSION"));
     let parse_header = |val: String| HeaderValue::from_str(&val).unwrap();
 
     match std::fs::read_to_string(global!("ez.token")) {
@@ -42,7 +41,7 @@ pub fn create(url: &String, domain: &Option<String>, longurl: &bool) {
 
     match client
         .post("https://api.e-z.host/shortener")
-        .header("user-agent", user_agent)
+        .header("user-agent", *USER_AGENT)
         .headers(headers)
         .json(&Request { url })
         .send()

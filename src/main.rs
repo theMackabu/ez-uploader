@@ -27,6 +27,12 @@ enum Commands {
     Login,
     /// Remove your access key
     Logout,
+    /// Delete a file (last 10 cached)
+    Delete {
+        /// The file you want to delete
+        #[command()]
+        file: Option<String>,
+    },
     /// Upload images, videos, gifs and audio
     Upload {
         /// The file you want to upload
@@ -74,6 +80,14 @@ fn main() {
     env.filter_level(level).init();
 
     match &cli.command {
+        // authentication
+        Some(Commands::Login) => routes::auth::login(),
+        Some(Commands::Logout) => routes::auth::logout(),
+
+        // commands
+        Some(Commands::Delete { file }) => routes::files::delete(file),
+        Some(Commands::Shorten { url, domain, longurl }) => routes::shorten::create(url, domain, longurl),
+
         Some(Commands::Upload {
             file,
             domain,
@@ -84,9 +98,6 @@ fn main() {
             custom,
         }) => routes::files::upload(file, domain, random, invisible, emoji, sus, custom),
 
-        Some(Commands::Shorten { url, domain, longurl }) => routes::shorten::create(url, domain, longurl),
-        Some(Commands::Login) => routes::auth::login(),
-        Some(Commands::Logout) => routes::auth::logout(),
         None => Cli::command().print_help().unwrap(),
     }
 }

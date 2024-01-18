@@ -15,6 +15,7 @@ pub fn init() {
 
             init!("ez.base", format!("{path}/.ez/"));
             init!("ez.token", format!("{path}/.ez/.token"));
+            init!("ez.cache", format!("{path}/.ez/cache"));
         }
         None => error!("Impossible to get your home directory"),
     }

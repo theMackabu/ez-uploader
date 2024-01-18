@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This is a CLI tool for interacting directly with the `e-z.host` API. (from the ✨*command line*✨)
+This is a CLI tool for interacting directly with the [e-z.host](https://ez.gg) API. (from the ✨*command line*✨)
 
 ### Building
 
@@ -17,19 +17,46 @@ This is a CLI tool for interacting directly with the `e-z.host` API. (from the �
 ## Usage
 
 ```
-login            | Save your access key
-logout           | Remove your access key
-ez upload <path> | Upload images, videos, gifs and audio
+Commands:
+  login    Save your access key
+  logout   Remove your access key
+  upload   Upload images, videos, gifs and audio
+  shorten  Shorten urls
+  help     Print this message or the help of the given subcommand(s)
+
 Options:
-  -d, --domain <DOMAIN>  Domain to be used when uploading [default: i.e-z.host]
-  -r, --random           Whether random domain is used
-  -i, --invisible        Whether invisible url is used
-  -e, --emoji            Whether emoji url is used
-  -a, --amongus          Whether amongus url is used
-  -c, --custom           Whether custom url is used
-ez shorten <url> | Shorten urls
+  -v, --verbose...  Increase logging verbosity
+  -q, --quiet...    Decrease logging verbosity
+  -h, --help        Print help
+  -V, --version     Print version
+```
+
+### Upload images, videos, gifs and audio
+
+```
+Usage: ez upload [OPTIONS] <FILE>
+
+Arguments:
+  <FILE>  The file you want to upload
+
 Options:
-  -d, --domain <DOMAIN>  Domain to be used when shortened [default: astolfo.host]
-  -l, --longurl          Whether long url is used
-ez --help        | Displays the usage of this cli
+  -d, --domain <DOMAIN>  Override domain to be used when uploading
+  -r, --random           Toggle the use of your selected random domains
+  -i, --invisible        Toggle the use of invisible characters in filenames
+  -e, --emoji            Toggle the use of emojis in filenames
+  -s, --sus              Toggle the use of among us characters in filenames
+  -c, --custom           Toggle the use of custom characters in filenames
+```
+
+### Shorten urls
+
+```
+Usage: ez shorten [OPTIONS] <URL>
+
+Arguments:
+  <URL>  The url you want to shorten
+
+Options:
+  -d, --domain <DOMAIN>  Override domain to be used when uploading
+  -l, --longurl          Toggle between 8 and 18 character URLs
 ```

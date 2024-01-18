@@ -1,6 +1,6 @@
 [project]
 name = "e-z"
-version = "0.1.1"
+version = "0.1.2"
 
 [tasks.clean]
 script = ["rm -rf bin", "mkdir bin"]

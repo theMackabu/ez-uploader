@@ -18,9 +18,16 @@ struct Response {
 pub fn upload(file_name: &String, domain: &Option<String>, random: &bool, invisible: &bool, emoji: &bool, amongus: &bool, custom: &bool) {
     let client = Client::new();
     let mut headers = HeaderMap::new();
-    let form = Form::new().file("file", &file_name).unwrap();
     let user_agent = format!("[rust] EZ uploader v{}", env!("CARGO_PKG_VERSION"));
     let parse_header = |val: String| HeaderValue::from_str(&val).unwrap();
+
+    let form = match Form::new().file("file", &file_name) {
+        Ok(form) => form,
+        Err(err) => {
+            log::error!("{err}");
+            error!("Unable to upload file, does it exist?");
+        }
+    };
 
     match std::fs::read_to_string(global!("ez.token")) {
         Ok(key) => headers.insert("key", parse_header(key)),

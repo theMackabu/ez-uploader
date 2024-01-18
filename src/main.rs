@@ -1,3 +1,4 @@
+mod cache;
 mod globals;
 mod helpers;
 mod routes;

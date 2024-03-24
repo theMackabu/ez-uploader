@@ -1,5 +1,7 @@
+use arboard::Clipboard;
 use colored::Colorize;
 use global_placeholders::global;
+use image::RgbaImage;
 
 use crate::{
     cache, error,
@@ -84,6 +86,57 @@ pub fn upload(file_name: &String, domain: &Option<String>, random: &bool, invisi
         },
         Err(err) => error!(format!("unable to upload file: {err}")),
     };
+}
+
+pub fn upload_clipboard(
+    domain: &Option<String>,
+    random: &bool,
+    invisible: &bool,
+    emoji: &bool,
+    amongus: &bool,
+    custom: &bool,
+) {
+    let mut clipboard = match Clipboard::new() {
+        Ok(clipboard) => clipboard,
+        Err(e) => error!(format!("Could not read from clipboard: {e}")),
+    };
+
+    let clipboard_image = match clipboard.get_image() {
+        Ok(image) => image,
+        Err(e) => error!(format!("Could not get image from clipboard: {e}")),
+    };
+
+    // This will break if someone has an image with more than 4 million pixels in height
+    // but I don't particularly care
+    let image_final = RgbaImage::from_raw(
+        clipboard_image.width as u32,
+        clipboard_image.height as u32,
+        clipboard_image.bytes.into_owned(),
+    )
+    .expect("Buffer size invariant should be held");
+
+    let image_file = match tempfile::Builder::new().suffix(".png").tempfile() {
+        Ok(file) => file,
+        Err(e) => error!(format!("Could not make file to store clipboard image: {e}")),
+    };
+
+    if let Err(e) = image_final.save(image_file.path()) {
+        error!(format!("Could not save clipboard image to temporary file: {e}"));
+    }
+
+    upload(
+        &image_file
+            .path()
+            .to_str()
+            .expect("tempfile crate should only create valid utf-8 filenames")
+            .to_owned(),
+        domain,
+        random,
+        invisible,
+        emoji,
+        amongus,
+        custom,
+    )
 }
 
 pub fn delete(file_name: &Option<String>) {

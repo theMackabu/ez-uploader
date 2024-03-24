@@ -3,7 +3,7 @@ mod globals;
 mod helpers;
 mod routes;
 
-use clap::{CommandFactory, Parser, Subcommand};
+use clap::{Args, CommandFactory, Parser, Subcommand};
 use clap_verbosity_flag::{LogLevel, Verbosity};
 
 #[derive(Copy, Clone, Debug, Default)]
@@ -38,24 +38,13 @@ enum Commands {
         /// The file you want to upload
         #[command()]
         file: String,
-        /// Override domain to be used when uploading
-        #[arg(short, long)]
-        domain: Option<String>,
-        /// Toggle the use of your selected random domains
-        #[arg(short, long)]
-        random: bool,
-        /// Toggle the use of invisible characters in filenames
-        #[arg(short, long)]
-        invisible: bool,
-        /// Toggle the use of emojis in filenames
-        #[arg(short, long)]
-        emoji: bool,
-        /// Toggle the use of among us characters in filenames
-        #[arg(short, long)]
-        sus: bool,
-        /// Toggle the use of custom characters in filenames
-        #[arg(short, long)]
-        custom: bool,
+        #[command(flatten)]
+        params: UploadParams,
+    },
+    /// Upload image from clipboard
+    Clipboard {
+        #[command(flatten)]
+        params: UploadParams,
     },
     /// Shorten urls
     Shorten {
@@ -69,6 +58,28 @@ enum Commands {
         #[arg(short, long)]
         longurl: bool,
     },
+}
+
+#[derive(Args)]
+struct UploadParams {
+    /// Override domain to be used when uploading
+    #[arg(short, long)]
+    domain: Option<String>,
+    /// Toggle the use of your selected random domains
+    #[arg(short, long)]
+    random: bool,
+    /// Toggle the use of invisible characters in filenames
+    #[arg(short, long)]
+    invisible: bool,
+    /// Toggle the use of emojis in filenames
+    #[arg(short, long)]
+    emoji: bool,
+    /// Toggle the use of among us characters in filenames
+    #[arg(short, long)]
+    sus: bool,
+    /// Toggle the use of custom characters in filenames
+    #[arg(short, long)]
+    custom: bool,
 }
 
 fn main() {
@@ -90,13 +101,25 @@ fn main() {
 
         Some(Commands::Upload {
             file,
-            domain,
-            random,
-            invisible,
-            emoji,
-            sus,
-            custom,
+            params: UploadParams {
+                domain,
+                random,
+                invisible,
+                emoji,
+                sus,
+                custom,
+            }
         }) => routes::files::upload(file, domain, random, invisible, emoji, sus, custom),
+
+        Some(Commands::Clipboard {
+            params: UploadParams {
+                domain,
+                random,
+                invisible,
+                emoji,
+                sus,
+                custom }
+        }) => routes::files::upload_clipboard(domain, random, invisible, emoji, sus, custom),
 
         None => Cli::command().print_help().unwrap(),
     }

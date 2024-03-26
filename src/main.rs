@@ -108,7 +108,7 @@ fn main() {
                 emoji,
                 sus,
                 custom,
-            }
+            },
         }) => routes::files::upload(file, domain, random, invisible, emoji, sus, custom),
 
         Some(Commands::Clipboard {
@@ -118,7 +118,8 @@ fn main() {
                 invisible,
                 emoji,
                 sus,
-                custom }
+                custom,
+            },
         }) => routes::files::upload_clipboard(domain, random, invisible, emoji, sus, custom),
 
         None => Cli::command().print_help().unwrap(),
